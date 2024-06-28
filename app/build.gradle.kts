@@ -2,6 +2,7 @@ plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.compose.compiler)
   alias(libs.plugins.jetbrains.kotlin.android)
+  alias(libs.plugins.jetbrains.kotlin.serialization)
   alias(libs.plugins.secrets.gradle.plugin)
 }
 
@@ -56,6 +57,7 @@ dependencies {
   implementation(libs.androidx.ui.graphics)
   implementation(libs.androidx.ui.tooling.preview)
   implementation(libs.androidx.material3)
+  implementation(libs.androidx.appcompat.resources)
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)
@@ -64,13 +66,24 @@ dependencies {
   debugImplementation(libs.androidx.ui.tooling)
   debugImplementation(libs.androidx.ui.test.manifest)
 
+  implementation("androidx.navigation:navigation-compose:2.8.0-beta03")
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.0")
+  implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.7")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0-RC")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0-RC")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0-RC")
+  implementation("com.jakewharton.timber:timber:5.0.1")
+
   // Google Maps Compose library
   val mapsComposeVersion = "5.0.4"
-  implementation("com.google.maps.android:maps-compose:$mapsComposeVersion")
+  implementation(libs.maps.compose)
   // Google Maps Compose utility library
-  implementation("com.google.maps.android:maps-compose-utils:$mapsComposeVersion")
+  implementation(libs.maps.compose.utils)
   // Google Maps Compose widgets library
-  implementation("com.google.maps.android:maps-compose-widgets:$mapsComposeVersion")
+  implementation(libs.maps.compose.widgets)
+
+  // Play Services Location
+  implementation(libs.play.services.location)
 }
 
 
