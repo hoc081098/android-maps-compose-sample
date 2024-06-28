@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
     super.onCreate(savedInstanceState)
     enableEdgeToEdge()
     setContent {
-      MapsComposeTheme {
+      MapsComposeTheme(dynamicColor = false) {
         val navController = rememberNavController()
 
         NavHost(navController = navController, startDestination = HomeRoute) {
