@@ -1,6 +1,7 @@
 package com.hoc081098.mapscompose.presentation.markers
 
 import android.annotation.SuppressLint
+import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -20,13 +21,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 sealed interface MarkersSingleEvent {
   data object CheckLocationPermission : MarkersSingleEvent
 
-  data class LocationSettingsDisabled(val resolvableApiException: ResolvableApiException) : MarkersSingleEvent
+  data class LocationSettingsDisabled(val resolvableApiException: ResolvableApiException) :
+    MarkersSingleEvent
 
   data object ZoomToCurrentLocation : MarkersSingleEvent
 }
@@ -59,7 +62,6 @@ class MarkersViewModel(
     viewModelScope.launch { _gpsSettingsResultChannel.send(enabled) }
   }
 
-  @SuppressLint("MissingPermission") // permission checked in getCurrentLocationAndStores
   internal fun getCurrentLocationAndStores() {
     viewModelScope.launch {
       when (uiStateFlow.value) {
@@ -77,51 +79,88 @@ class MarkersViewModel(
         }
       }
 
-      // set loading state
       _uiStateFlow.value = MarkersUiState.Loading
-
-      // await permission status from View
-      eventChannel.trySend(MarkersSingleEvent.CheckLocationPermission)
-
-      // handle permission status
-      val permissionStatus = _permissionStatusChannel
-        .receive()
-        .also { Timber.d("getCurrentLocationAndStores: permission status=$it") }
-
-      val currentLocationResult = when (permissionStatus) {
-        PermissionStatus.Granted -> {
-          if (isGpsSettingsEnabled()) {
-            androidLocationManager.getCurrentLocation().getOrNull()
-          } else {
-            null
-          }
-        }
-
-        is PermissionStatus.Denied,
-        PermissionStatus.Undefined -> null
-      }
-
-      _uiStateFlow.value = if (currentLocationResult == null) {
-        MarkersUiState.Error
-      } else {
-        storesRepository
-          .getStores(currentLocationResult)
-          .fold(
-            onSuccess = { stores ->
-              MarkersUiState.Content(
-                currentLatLng = currentLocationResult.toUiModel(),
-                zoomLevel = 15f,
-                stores = stores.map { it.toUiModel() }.toImmutableList(),
-              )
-            },
-            onFailure = { MarkersUiState.Error },
-          )
-      }
+      _uiStateFlow.value = getCurrentLocationAndStoresInternal()
     }
   }
 
   internal fun zoomToCurrentLocation() {
-    eventChannel.trySend(MarkersSingleEvent.ZoomToCurrentLocation)
+    viewModelScope.launch {
+      eventChannel.trySend(MarkersSingleEvent.ZoomToCurrentLocation)
+
+      _uiStateFlow.update { state ->
+        when (state) {
+          is MarkersUiState.Loading -> {
+            // do nothing
+            return@launch
+          }
+
+          MarkersUiState.Error, MarkersUiState.Uninitialized -> {
+            // retry or the first time
+            MarkersUiState.Loading
+          }
+
+          is MarkersUiState.Content -> {
+            if (state.isRefreshing) {
+              // do nothing
+              return@launch
+            } else {
+              state.copy(isRefreshing = true)
+            }
+          }
+        }
+      }
+
+      getCurrentLocationAndStoresInternal()
+        .takeIf { it is MarkersUiState.Content }
+        ?.let { _uiStateFlow.value = it }
+    }
+  }
+
+  //region Internal
+  @SuppressLint("MissingPermission")
+  @CheckResult
+  private suspend fun getCurrentLocationAndStoresInternal(): MarkersUiState {
+    // await permission status from View
+    eventChannel.trySend(MarkersSingleEvent.CheckLocationPermission)
+
+    // handle permission status
+    val permissionStatus = _permissionStatusChannel
+      .receive()
+      .also { Timber.d("getCurrentLocationAndStores: permission status=$it") }
+
+    // get current location
+    val currentLocationResult = when (permissionStatus) {
+      PermissionStatus.Granted -> {
+        if (isGpsSettingsEnabled()) {
+          androidLocationManager.getCurrentLocation().getOrNull()
+        } else {
+          null
+        }
+      }
+
+      is PermissionStatus.Denied,
+      PermissionStatus.Undefined -> null
+    }
+
+    // get stores
+    return if (currentLocationResult == null) {
+      MarkersUiState.Error
+    } else {
+      storesRepository
+        .getStores(currentLocationResult)
+        .fold(
+          onSuccess = { stores ->
+            MarkersUiState.Content(
+              currentLatLng = currentLocationResult.toUiModel(),
+              zoomLevel = GoogleMapContentDefaults.ZoomLevel,
+              stores = stores.map { it.toUiModel() }.toImmutableList(),
+              isRefreshing = false,
+            )
+          },
+          onFailure = { MarkersUiState.Error },
+        )
+    }
   }
 
   private suspend fun isGpsSettingsEnabled(): Boolean =
@@ -145,6 +184,7 @@ class MarkersViewModel(
           }
         }
       )
+  //endregion
 
   companion object {
     val factory = viewModelFactory {

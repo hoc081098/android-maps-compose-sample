@@ -17,5 +17,6 @@ sealed interface MarkersUiState {
     val currentLatLng: LatLngUiModel,
     val zoomLevel: Float,
     val stores: ImmutableList<StoreUiModel>,
+    val isRefreshing: Boolean,
   ) : MarkersUiState
 }

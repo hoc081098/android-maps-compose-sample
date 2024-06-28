@@ -45,7 +45,9 @@ fun BasicMarkersScreen(
     uiState.stores.forEach { store ->
       Marker(
         state = MarkerState(
-          position = remember(store.latLng) { store.latLng.toGmsLatLng() }
+          position = remember(store.latLng) {
+            store.latLng.toGmsLatLng()
+          }
         ),
         icon = if (selectedStore == store) {
           selectedStoreIcon
@@ -66,10 +68,14 @@ fun BasicMarkersScreen(
 
     Marker(
       state = MarkerState(
-        position = remember(uiState.currentLatLng) { uiState.currentLatLng.toGmsLatLng() }
+        position = remember(uiState.currentLatLng) {
+          uiState.currentLatLng.toGmsLatLng()
+        }
       ),
       icon = currentLocationIcon,
+      title = "Current location",
       anchor = Offset(x = 0.5f, y = 0.5f),
+      zIndex = 10f,
     )
   }
 }
