@@ -8,21 +8,30 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.GoogleMapComposable
+import com.google.maps.android.compose.rememberCameraPositionState
 import com.hoc081098.mapscompose.presentation.utils.CollectWithLifecycleEffect
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,12 +43,17 @@ fun MarkersScreen(
   viewModel: MarkersViewModel = viewModel(factory = MarkersViewModel.factory),
   markerContent: @Composable @GoogleMapComposable (content: MarkersUiState.Content) -> Unit,
 ) {
-  val uiState by viewModel.uiStateFlow.collectAsStateWithLifecycle()
+  val scope = rememberCoroutineScope()
 
+  // -------------------------------------------- ViewModel UiState and logic --------------------------------------------
+
+  val uiState by viewModel.uiStateFlow.collectAsStateWithLifecycle()
   LifecycleResumeEffect(viewModel) {
     viewModel.getCurrentLocationAndStores()
     onPauseOrDispose { }
   }
+
+  // -------------------------------------------- Single event handler --------------------------------------------
 
   val checkLocationSettingsLauncher = rememberLauncherForActivityResult(
     ActivityResultContracts.StartIntentSenderForResult()
@@ -50,6 +64,13 @@ fun MarkersScreen(
 
   val requestMultipleLocationPermissionsEffect =
     rememberRequestMultipleLocationPermissionsEffect(onPermissionsResult = viewModel::onPermissionResult)
+
+  val cameraPositionState = rememberCameraPositionState {
+    position = CameraPosition.fromLatLngZoom(
+      /* target = */ GoogleMapContentDefaults.LatLng,
+      /* zoom = */ GoogleMapContentDefaults.ZoomLevel
+    )
+  }
 
   viewModel.singleEventFlow.CollectWithLifecycleEffect { event ->
     Timber.d("singleEventFlow: event=$event")
@@ -65,8 +86,17 @@ fun MarkersScreen(
       MarkersSingleEvent.CheckLocationPermission -> {
         requestMultipleLocationPermissionsEffect()
       }
+
+      MarkersSingleEvent.ZoomToCurrentLocation -> {
+        val currentLatLng = (viewModel.uiStateFlow.value as? MarkersUiState.Content)
+          ?.currentLatLng
+          ?: return@CollectWithLifecycleEffect
+        scope.launch { cameraPositionState.animateToLatLngWithTheSameZoomLevel(latLng = currentLatLng) }
+      }
     }
   }
+
+  // -------------------------------------------- UI --------------------------------------------
 
   Scaffold(
     modifier = modifier,
@@ -76,7 +106,13 @@ fun MarkersScreen(
           Text(text = title)
         }
       )
-    }
+    },
+    floatingActionButton = {
+      FloatingActionButton(onClick = viewModel::zoomToCurrentLocation) {
+        Icon(imageVector = Icons.Default.LocationOn, contentDescription = null)
+      }
+    },
+    floatingActionButtonPosition = FabPosition.Center,
   ) { innerPadding ->
     Box(
       modifier = Modifier
@@ -105,9 +141,10 @@ fun MarkersScreen(
         is MarkersUiState.Content -> {
           GoogleMapContent(
             modifier = Modifier.fillMaxSize(),
+            cameraPositionState = cameraPositionState,
             uiState = s,
             markerContent = markerContent,
-            onDrag = onDrag
+            onDrag = onDrag,
           )
         }
       }

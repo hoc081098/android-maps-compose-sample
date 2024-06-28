@@ -27,6 +27,8 @@ sealed interface MarkersSingleEvent {
   data object CheckLocationPermission : MarkersSingleEvent
 
   data class LocationSettingsDisabled(val resolvableApiException: ResolvableApiException) : MarkersSingleEvent
+
+  data object ZoomToCurrentLocation : MarkersSingleEvent
 }
 
 class MarkersViewModel(
@@ -58,7 +60,7 @@ class MarkersViewModel(
   }
 
   @SuppressLint("MissingPermission") // permission checked in getCurrentLocationAndStores
-  fun getCurrentLocationAndStores() {
+  internal fun getCurrentLocationAndStores() {
     viewModelScope.launch {
       when (uiStateFlow.value) {
         is MarkersUiState.Content, MarkersUiState.Loading -> {
@@ -118,6 +120,10 @@ class MarkersViewModel(
     }
   }
 
+  internal fun zoomToCurrentLocation() {
+    eventChannel.trySend(MarkersSingleEvent.ZoomToCurrentLocation)
+  }
+
   private suspend fun isGpsSettingsEnabled(): Boolean =
     androidLocationManager
       .checkLocationSettings()
@@ -139,7 +145,6 @@ class MarkersViewModel(
           }
         }
       )
-
 
   companion object {
     val factory = viewModelFactory {

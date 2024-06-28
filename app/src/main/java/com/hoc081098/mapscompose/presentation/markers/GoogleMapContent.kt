@@ -32,8 +32,8 @@ import com.google.maps.android.compose.DefaultMapProperties
 import com.google.maps.android.compose.DefaultMapUiSettings
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.GoogleMapComposable
-import com.google.maps.android.compose.rememberCameraPositionState
 import com.hoc081098.mapscompose.R
+import com.hoc081098.mapscompose.presentation.models.LatLngUiModel
 import com.hoc081098.mapscompose.presentation.models.toGmsLatLng
 import com.hoc081098.mapscompose.presentation.utils.bitmapDescriptorFactory
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -48,20 +48,14 @@ object GoogleMapContentDefaults {
 @Composable
 fun GoogleMapContent(
   uiState: MarkersUiState.Content,
+  cameraPositionState: CameraPositionState,
   modifier: Modifier,
   onDrag: () -> Unit = {},
   markerContent: @Composable @GoogleMapComposable (content: MarkersUiState.Content) -> Unit = {},
 ) {
   var isMapLoaded by remember { mutableStateOf(false) }
-  val cameraPositionState = rememberCameraPositionState {
-    position = CameraPosition.fromLatLngZoom(
-      /* target = */ GoogleMapContentDefaults.LatLng,
-      /* zoom = */ GoogleMapContentDefaults.ZoomLevel
-    )
-  }
 
   HandleDragMapSideEffect(cameraPositionState, onDrag)
-
   LaunchedEffect(cameraPositionState, uiState.currentLatLng, uiState.zoomLevel) {
     cameraPositionState.animate(
       update = CameraUpdateFactory.newCameraPosition(
@@ -152,6 +146,18 @@ private fun HandleDragMapSideEffect(
         }
       }
   }
+}
+
+suspend fun CameraPositionState.animateToLatLngWithTheSameZoomLevel(latLng: LatLngUiModel) {
+  animate(
+    update = CameraUpdateFactory.newCameraPosition(
+      CameraPosition.fromLatLngZoom(
+        /* target = */ latLng.toGmsLatLng(),
+        /* zoom = */ position.zoom
+      )
+    ),
+    durationMs = GoogleMapContentDefaults.AnimateDurationMillis,
+  )
 }
 
 @Composable
