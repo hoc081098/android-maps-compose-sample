@@ -7,6 +7,8 @@ import kotlinx.collections.immutable.ImmutableList
 
 @Immutable
 sealed interface MarkersUiState {
+  data object Uninitialized : MarkersUiState
+
   data object Loading : MarkersUiState
 
   data object Error : MarkersUiState

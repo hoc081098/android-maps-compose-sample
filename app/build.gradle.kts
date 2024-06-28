@@ -75,7 +75,6 @@ dependencies {
   implementation("com.jakewharton.timber:timber:5.0.1")
 
   // Google Maps Compose library
-  val mapsComposeVersion = "5.0.4"
   implementation(libs.maps.compose)
   // Google Maps Compose utility library
   implementation(libs.maps.compose.utils)
@@ -91,4 +90,8 @@ secrets {
   // A properties file containing default secret values.
   // This file can be checked in version control.
   defaultPropertiesFileName = "secrets.defaults.properties"
+}
+
+composeCompiler {
+  enableStrongSkippingMode = true
 }

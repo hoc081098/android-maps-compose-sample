@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.google.android.gms.common.api.ResolvableApiException
+import com.hoc081098.mapscompose.MapsComposeAppLocator
 import com.hoc081098.mapscompose.domain.StoreRepository
 import com.hoc081098.mapscompose.presentation.AndroidLocationManager
 import com.hoc081098.mapscompose.presentation.AndroidLocationManager.LocationSettingsError
@@ -41,7 +42,7 @@ class MarkersViewModel(
     onBufferOverflow = BufferOverflow.DROP_OLDEST,
   )
   private val eventChannel = Channel<MarkersSingleEvent>(Channel.UNLIMITED)
-  private val _uiStateFlow = MutableStateFlow<MarkersUiState>(MarkersUiState.Loading)
+  private val _uiStateFlow = MutableStateFlow<MarkersUiState>(MarkersUiState.Uninitialized)
 
   val uiStateFlow: StateFlow<MarkersUiState> = _uiStateFlow.asStateFlow()
   val singleEventFlow: Flow<MarkersSingleEvent> = eventChannel.receiveAsFlow()
@@ -68,13 +69,17 @@ class MarkersViewModel(
         MarkersUiState.Error -> {
           // retry
         }
+
+        MarkersUiState.Uninitialized -> {
+          // the first time
+        }
       }
 
       // set loading state
       _uiStateFlow.value = MarkersUiState.Loading
 
       // await permission status from View
-      eventChannel.send(MarkersSingleEvent.CheckLocationPermission)
+      eventChannel.trySend(MarkersSingleEvent.CheckLocationPermission)
 
       // handle permission status
       val permissionStatus = _permissionStatusChannel
@@ -124,7 +129,7 @@ class MarkersViewModel(
             is LocationSettingsError.LocationSettingsDisabled -> {
               coroutineScope {
                 // enable GPS settings
-                eventChannel.send(MarkersSingleEvent.LocationSettingsDisabled(error.resolvableApiException))
+                eventChannel.trySend(MarkersSingleEvent.LocationSettingsDisabled(error.resolvableApiException))
                 // await GPS status
                 _gpsSettingsResultChannel.receive()
               }
@@ -139,7 +144,10 @@ class MarkersViewModel(
   companion object {
     val factory = viewModelFactory {
       addInitializer(MarkersViewModel::class) {
-        TODO()
+        MarkersViewModel(
+          storesRepository = MapsComposeAppLocator.storeRepository,
+          androidLocationManager = MapsComposeAppLocator.androidLocationManager,
+        )
       }
     }
   }

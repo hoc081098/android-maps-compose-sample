@@ -7,7 +7,6 @@ import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.runtime.RememberObserver
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
@@ -64,7 +63,7 @@ enum class CollectWithLifecycleEffectDispatcher {
 @Composable
 fun <T> Flow<T>.CollectWithLifecycleEffect(
   vararg keys: Any?,
-  lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
+  lifecycleOwner: LifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current,
   minActiveState: Lifecycle.State = Lifecycle.State.STARTED,
   dispatcher: CollectWithLifecycleEffectDispatcher = CollectWithLifecycleEffectDispatcher.ImmediateMain,
   collector: (T) -> Unit,

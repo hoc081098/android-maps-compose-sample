@@ -42,9 +42,9 @@ fun HomeScreen(
   ) { innerPadding ->
     Box(
       modifier = Modifier
-          .fillMaxSize()
-          .padding(innerPadding)
-          .consumeWindowInsets(innerPadding),
+        .fillMaxSize()
+        .padding(innerPadding)
+        .consumeWindowInsets(innerPadding),
       contentAlignment = Alignment.Center,
     ) {
       Column(

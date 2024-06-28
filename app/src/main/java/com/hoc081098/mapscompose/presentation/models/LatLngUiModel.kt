@@ -10,6 +10,6 @@ data class LatLngUiModel(
   val longitude: Double
 )
 
-fun DomainLatLng.toUiModel() = LatLngUiModel(latitude, longitude)
+fun DomainLatLng.toUiModel() = LatLngUiModel(latitude = latitude, longitude = longitude)
 
-fun LatLngUiModel.toGmsLatLng(): LatLng = LatLng(latitude, longitude)
+fun LatLngUiModel.toGmsLatLng(): LatLng = LatLng(/* latitude = */ latitude, /* longitude = */ longitude)

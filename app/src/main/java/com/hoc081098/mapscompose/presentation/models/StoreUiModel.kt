@@ -9,7 +9,8 @@ data class StoreUiModel(
   val name: String,
   val address: String,
   val latLng: LatLngUiModel,
-  val description: String
+  val description: String,
+  val isFavorite: Boolean
 )
 
 fun Store.toUiModel() = StoreUiModel(
@@ -17,5 +18,6 @@ fun Store.toUiModel() = StoreUiModel(
   name = name,
   address = address,
   latLng = latLng.toUiModel(),
-  description = description
+  description = description,
+  isFavorite = isFavorite
 )

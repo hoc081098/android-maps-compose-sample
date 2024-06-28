@@ -129,7 +129,7 @@ internal class GmsAndroidLocationManager(
     }
   }
     .mapFailure { (it as? LocationError) ?: LocationError.Unknown(it) }
-    .onSuccess { Timber.d("getCurrentLocation: $it")}
+    .onSuccess { Timber.d("getCurrentLocation: $it") }
     .onFailure { Timber.e(it, "Cannot get current location") }
 
   @Suppress("unused")

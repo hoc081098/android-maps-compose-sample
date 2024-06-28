@@ -5,5 +5,6 @@ data class Store(
   val name: String,
   val address: String,
   val latLng: DomainLatLng,
-  val description: String
+  val description: String,
+  val isFavorite: Boolean,
 )
