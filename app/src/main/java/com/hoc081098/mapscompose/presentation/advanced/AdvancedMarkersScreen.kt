@@ -6,6 +6,8 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.model.AdvancedMarkerOptions
 import com.google.android.gms.maps.model.PinConfig
 import com.google.maps.android.compose.AdvancedMarker
@@ -22,11 +24,15 @@ import com.hoc081098.mapscompose.presentation.utils.vectorToBitmap
 fun AdvancedMarkersScreen(
   uiState: MarkersUiState.Content,
 ) {
+  val iconSize = with(LocalDensity.current) { 16.dp.toPx().toInt() }
+
   val normalPin = with(PinConfig.builder()) {
     val storeIcon = vectorToBitmap(
       BitmapParameters(
         id = R.drawable.ic_store_100,
         iconColor = MaterialTheme.colorScheme.onSecondary.toArgb(),
+        width = iconSize,
+        height = iconSize,
       )
     )
     setGlyph(PinConfig.Glyph(storeIcon))
@@ -38,8 +44,10 @@ fun AdvancedMarkersScreen(
   val favoritePin = with(PinConfig.builder()) {
     val storeIcon = vectorToBitmap(
       BitmapParameters(
-        id = R.drawable.ic_store_96,
+        id = R.drawable.baseline_store_24,
         iconColor = MaterialTheme.colorScheme.onSecondary.toArgb(),
+        width = iconSize,
+        height = iconSize,
       )
     )
     setGlyph(PinConfig.Glyph(storeIcon))
@@ -53,6 +61,8 @@ fun AdvancedMarkersScreen(
       BitmapParameters(
         id = R.drawable.baseline_location_on_24,
         iconColor = MaterialTheme.colorScheme.onSecondary.toArgb(),
+        width = iconSize,
+        height = iconSize,
       )
     )
     setGlyph(PinConfig.Glyph(locationIcon))

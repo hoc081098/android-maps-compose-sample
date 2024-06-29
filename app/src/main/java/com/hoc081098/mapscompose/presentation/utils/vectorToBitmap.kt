@@ -19,6 +19,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
+import androidx.annotation.Px
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.ReadOnlyComposable
@@ -41,6 +42,8 @@ data class BitmapParameters(
   @ColorInt val backgroundColor: Int? = null,
   val backgroundAlpha: Int = 168,
   val padding: Int = 16,
+  @Px val width: Int? = null,
+  @Px val height: Int? = null,
 )
 
 // Cache of [BitmapDescriptor]s
@@ -78,16 +81,16 @@ private fun createBitmapDescriptor(
   val halfPadding = padding / 2
 
   val bitmap = Bitmap.createBitmap(
-    vectorDrawable.intrinsicWidth + padding,
-    vectorDrawable.intrinsicHeight + padding,
-    Bitmap.Config.ARGB_8888
+    /* width = */ parameters.width ?: (vectorDrawable.intrinsicWidth + padding),
+    /* height = */ parameters.height ?: (vectorDrawable.intrinsicHeight + padding),
+    /* config = */ Bitmap.Config.ARGB_8888
   )
   val canvas = Canvas(bitmap)
   vectorDrawable.setBounds(
-    halfPadding,
-    halfPadding,
-    canvas.width - halfPadding,
-    canvas.height - halfPadding
+    /* left = */ halfPadding,
+    /* top = */ halfPadding,
+    /* right = */ canvas.width - halfPadding,
+    /* bottom = */ canvas.height - halfPadding
   )
   DrawableCompat.setTint(vectorDrawable, parameters.iconColor)
 

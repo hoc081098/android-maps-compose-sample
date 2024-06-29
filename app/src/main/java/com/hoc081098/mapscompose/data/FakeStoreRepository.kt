@@ -19,13 +19,14 @@ class FakeStoreRepository : StoreRepository {
         .shuffled()
         .take(200)
         .mapIndexed { index, domainLatLng ->
+          val isFavorite = index % 3 == 0
           Store(
             id = index.toString(),
             name = "Store #$index",
             address = "Address of #$index",
             latLng = domainLatLng,
-            description = "Description of #$index",
-            isFavorite = index % 3 == 0,
+            description = "Description of #$index, isFavorite = $isFavorite",
+            isFavorite = isFavorite,
           )
         }
     )
