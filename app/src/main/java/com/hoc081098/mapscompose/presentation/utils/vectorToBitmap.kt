@@ -19,6 +19,10 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import com.google.android.gms.maps.model.BitmapDescriptor
@@ -30,6 +34,7 @@ private const val TAG = "BitmapHelper"
 /**
  * Customizable set of parameters for generating a [BitmapDescriptor] for use a a map marker.
  */
+@Immutable
 data class BitmapParameters(
   @DrawableRes val id: Int,
   @ColorInt val iconColor: Int,
@@ -47,6 +52,11 @@ private val bitmapCache = mutableMapOf<BitmapParameters, BitmapDescriptor>()
 fun vectorToBitmap(context: Context, parameters: BitmapParameters): BitmapDescriptor {
   return bitmapCache[parameters] ?: createBitmapDescriptor(context, parameters)
 }
+
+@ReadOnlyComposable
+@Composable
+fun vectorToBitmap(parameters: BitmapParameters): BitmapDescriptor =
+  vectorToBitmap(LocalContext.current, parameters)
 
 /**
  * Creates a customized [BitmapDescriptor] for use as a map marker.

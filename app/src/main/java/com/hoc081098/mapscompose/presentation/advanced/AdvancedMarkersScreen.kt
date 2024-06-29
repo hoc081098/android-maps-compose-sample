@@ -11,33 +11,51 @@ import com.google.android.gms.maps.model.PinConfig
 import com.google.maps.android.compose.AdvancedMarker
 import com.google.maps.android.compose.GoogleMapComposable
 import com.google.maps.android.compose.rememberMarkerState
+import com.hoc081098.mapscompose.R
 import com.hoc081098.mapscompose.presentation.markers.MarkersUiState
 import com.hoc081098.mapscompose.presentation.models.toGmsLatLng
-import com.hoc081098.mapscompose.presentation.utils.rememberStoreBitmapDescriptors
+import com.hoc081098.mapscompose.presentation.utils.BitmapParameters
+import com.hoc081098.mapscompose.presentation.utils.vectorToBitmap
 
 @Composable
 @GoogleMapComposable
 fun AdvancedMarkersScreen(
   uiState: MarkersUiState.Content,
 ) {
-  val bitmapDescriptors = rememberStoreBitmapDescriptors()
-
   val normalPin = with(PinConfig.builder()) {
-    setGlyph(PinConfig.Glyph(bitmapDescriptors.unselectedNormalStoreIcon))
+    val storeIcon = vectorToBitmap(
+      BitmapParameters(
+        id = R.drawable.ic_store_100,
+        iconColor = MaterialTheme.colorScheme.onSecondary.toArgb(),
+      )
+    )
+    setGlyph(PinConfig.Glyph(storeIcon))
     setBackgroundColor(MaterialTheme.colorScheme.secondary.toArgb())
     setBorderColor(MaterialTheme.colorScheme.onSecondary.toArgb())
     build()
   }
 
   val favoritePin = with(PinConfig.builder()) {
-    setGlyph(PinConfig.Glyph(bitmapDescriptors.unselectedFavoriteStoreIcon))
+    val storeIcon = vectorToBitmap(
+      BitmapParameters(
+        id = R.drawable.ic_store_96,
+        iconColor = MaterialTheme.colorScheme.onSecondary.toArgb(),
+      )
+    )
+    setGlyph(PinConfig.Glyph(storeIcon))
     setBackgroundColor(MaterialTheme.colorScheme.primary.toArgb())
     setBorderColor(MaterialTheme.colorScheme.onPrimary.toArgb())
     build()
   }
 
   val currentLocationPin = with(PinConfig.builder()) {
-    setGlyph(PinConfig.Glyph(bitmapDescriptors.currentLocationIcon))
+    val locationIcon = vectorToBitmap(
+      BitmapParameters(
+        id = R.drawable.baseline_location_on_24,
+        iconColor = MaterialTheme.colorScheme.onSecondary.toArgb(),
+      )
+    )
+    setGlyph(PinConfig.Glyph(locationIcon))
     setBackgroundColor(MaterialTheme.colorScheme.primary.toArgb())
     setBorderColor(MaterialTheme.colorScheme.onPrimary.toArgb())
     build()
