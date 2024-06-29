@@ -20,24 +20,24 @@ import com.hoc081098.mapscompose.presentation.utils.rememberStoreBitmapDescripto
 fun AdvancedMarkersScreen(
   uiState: MarkersUiState.Content,
 ) {
-  val d = rememberStoreBitmapDescriptors()
+  val bitmapDescriptors = rememberStoreBitmapDescriptors()
 
   val normalPin = with(PinConfig.builder()) {
-    setGlyph(PinConfig.Glyph(d.unselectedNormalStoreIcon))
+    setGlyph(PinConfig.Glyph(bitmapDescriptors.unselectedNormalStoreIcon))
     setBackgroundColor(MaterialTheme.colorScheme.secondary.toArgb())
     setBorderColor(MaterialTheme.colorScheme.onSecondary.toArgb())
     build()
   }
 
   val favoritePin = with(PinConfig.builder()) {
-    setGlyph(PinConfig.Glyph(d.unselectedFavoriteStoreIcon))
+    setGlyph(PinConfig.Glyph(bitmapDescriptors.unselectedFavoriteStoreIcon))
     setBackgroundColor(MaterialTheme.colorScheme.primary.toArgb())
     setBorderColor(MaterialTheme.colorScheme.onPrimary.toArgb())
     build()
   }
 
   val currentLocationPin = with(PinConfig.builder()) {
-    setGlyph(PinConfig.Glyph(d.currentLocationIcon))
+    setGlyph(PinConfig.Glyph(bitmapDescriptors.currentLocationIcon))
     setBackgroundColor(MaterialTheme.colorScheme.primary.toArgb())
     setBorderColor(MaterialTheme.colorScheme.onPrimary.toArgb())
     build()

@@ -31,6 +31,7 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.GoogleMapComposable
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
+import com.hoc081098.mapscompose.BuildConfig
 import com.hoc081098.mapscompose.R
 import com.hoc081098.mapscompose.presentation.models.LatLngUiModel
 import com.hoc081098.mapscompose.presentation.models.toGmsLatLng
@@ -88,9 +89,7 @@ fun GoogleMapContent(
       onMapClick = {},
       onMapLongClick = {},
       onMapLoaded = { isMapLoaded = true },
-      googleMapOptionsFactory = {
-        GoogleMapOptions().mapId("f32746b9824967c1")
-      }
+      googleMapOptionsFactory = { GoogleMapOptions().mapId(BuildConfig.MAPS_ID) }
     ) {
       markerContent(uiState)
     }
