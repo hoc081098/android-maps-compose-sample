@@ -40,16 +40,22 @@ import timber.log.Timber
 interface AndroidLocationManager {
   suspend fun checkLocationSettings(): Result<Unit>
 
-  sealed class LocationSettingsError(message: String?, cause: Throwable?) : RuntimeException(message, cause) {
+  sealed class LocationSettingsError(message: String?, cause: Throwable?) :
+    RuntimeException(message, cause) {
     data class LocationSettingsDisabled(val resolvableApiException: ResolvableApiException) :
       LocationSettingsError(message = "Location settings is disable. Try to resolve!", cause = null)
 
     data class ApiException(val apiException: GoogleApiException) :
-      LocationSettingsError(message = "Api exception: ${apiException.message}", cause = apiException)
+      LocationSettingsError(
+        message = "Api exception: ${apiException.message}",
+        cause = apiException
+      )
   }
 
-  sealed class LocationError(message: String?, cause: Throwable?) : RuntimeException(message, cause) {
-    class LocationAvailabilityError : LocationError(message = "The location is unavailable", cause = null)
+  sealed class LocationError(message: String?, cause: Throwable?) :
+    RuntimeException(message, cause) {
+    class LocationAvailabilityError :
+      LocationError(message = "The location is unavailable", cause = null)
 
     class Unknown(cause: Throwable) : LocationError(message = cause.message, cause = cause)
   }
@@ -194,7 +200,10 @@ internal class GmsAndroidLocationManager(
           continuation
             .takeIf { it.isActive }
             ?.run {
-              Timber.e(exception, "getCurrentLocation: [locationCallback] requestLocationUpdates resumeException")
+              Timber.e(
+                exception,
+                "getCurrentLocation: [locationCallback] requestLocationUpdates resumeException"
+              )
               resumeWithException(LocationError.Unknown(exception))
             }
         }

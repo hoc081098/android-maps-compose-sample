@@ -11,11 +11,24 @@ import timber.log.Timber
 class MapsComposeApp : Application() {
   override fun onCreate() {
     super.onCreate()
-    MapsInitializer.initialize(this)
-    MapsComposeAppLocator.initialize(this)
+
     if (BuildConfig.DEBUG) {
       Timber.plant(Timber.DebugTree())
     }
+
+    MapsInitializer.initialize(applicationContext, MapsInitializer.Renderer.LATEST) { renderer ->
+      when (renderer) {
+        MapsInitializer.Renderer.LATEST ->
+          Timber.tag("MapsDemo").d("The latest version of the renderer is used.")
+
+        MapsInitializer.Renderer.LEGACY ->
+          Timber.tag("MapsDemo").d("The legacy version of the renderer is used.")
+
+        else -> Unit
+      }
+    }
+
+    MapsComposeAppLocator.initialize(this)
   }
 }
 

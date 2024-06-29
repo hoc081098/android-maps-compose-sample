@@ -20,22 +20,20 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.GoogleMapOptions
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.CameraMoveStartedReason
 import com.google.maps.android.compose.CameraPositionState
-import com.google.maps.android.compose.DefaultMapProperties
-import com.google.maps.android.compose.DefaultMapUiSettings
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.GoogleMapComposable
+import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.MapType
 import com.hoc081098.mapscompose.R
 import com.hoc081098.mapscompose.presentation.models.LatLngUiModel
 import com.hoc081098.mapscompose.presentation.models.toGmsLatLng
-import com.hoc081098.mapscompose.presentation.utils.bitmapDescriptorFactory
 import kotlinx.coroutines.flow.distinctUntilChanged
 import timber.log.Timber
 
@@ -56,6 +54,7 @@ fun GoogleMapContent(
   var isMapLoaded by remember { mutableStateOf(false) }
 
   HandleDragMapSideEffect(cameraPositionState, onDrag)
+
   LaunchedEffect(cameraPositionState, uiState.currentLatLng, uiState.zoomLevel) {
     cameraPositionState.animate(
       update = CameraUpdateFactory.newCameraPosition(
@@ -72,6 +71,7 @@ fun GoogleMapContent(
     )
   }
 
+  val context = LocalContext.current
   Box(
     modifier = modifier.fillMaxSize(),
     contentAlignment = Alignment.Center,
@@ -79,38 +79,33 @@ fun GoogleMapContent(
     GoogleMap(
       modifier = Modifier.fillMaxSize(),
       cameraPositionState = cameraPositionState,
-      uiSettings = remember {
-        DefaultMapUiSettings.copy(
-          myLocationButtonEnabled = false,
-        )
-      },
       properties = remember {
-        DefaultMapProperties.copy(
-          isBuildingEnabled = true,
-          isIndoorEnabled = true,
-          maxZoomPreference = 25f,
+        MapProperties(
+          mapType = MapType.NORMAL,
+          mapStyleOptions = MapStyleOptions.loadRawResourceStyle(context, R.raw.style_json)
         )
       },
       onMapClick = {},
       onMapLongClick = {},
-      onMapLoaded = { isMapLoaded = true }
+      onMapLoaded = { isMapLoaded = true },
+      googleMapOptionsFactory = {
+        GoogleMapOptions().mapId("f32746b9824967c1")
+      }
     ) {
       markerContent(uiState)
     }
 
-    if (!isMapLoaded) {
-      AnimatedVisibility(
-        modifier = Modifier.matchParentSize(),
-        visible = !isMapLoaded,
-        enter = EnterTransition.None,
-        exit = fadeOut()
-      ) {
-        CircularProgressIndicator(
-          modifier = Modifier
-            .background(MaterialTheme.colorScheme.background)
-            .wrapContentSize()
-        )
-      }
+    AnimatedVisibility(
+      modifier = Modifier.matchParentSize(),
+      visible = !isMapLoaded,
+      enter = EnterTransition.None,
+      exit = fadeOut()
+    ) {
+      CircularProgressIndicator(
+        modifier = Modifier
+          .background(MaterialTheme.colorScheme.background)
+          .wrapContentSize()
+      )
     }
   }
 }
@@ -158,20 +153,4 @@ suspend fun CameraPositionState.animateToLatLngWithTheSameZoomLevel(latLng: LatL
     ),
     durationMs = GoogleMapContentDefaults.AnimateDurationMillis,
   )
-}
-
-@Composable
-fun rememberCurrentLocationBitmapDescriptor(): BitmapDescriptor? {
-  val context = LocalContext.current
-  val density = LocalDensity.current
-
-  return remember(context, density) {
-    val currentIconSizeInDp = density.run { 64.dp.toPx() }.toInt()
-
-    context.bitmapDescriptorFactory(
-      resId = R.drawable.ic_current_location_96,
-      width = currentIconSizeInDp,
-      height = currentIconSizeInDp,
-    )
-  }
 }

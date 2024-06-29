@@ -43,9 +43,13 @@ private fun genLatLngsInCircle(center: DomainLatLng, radiusInMeter: Double): Lis
   for (i in 0 until numPoints) {
     val theta = i * dTheta
     val distanceRatio = radiusInMeter / earthRadiusMeters
-    val newLat = asin(sin(latRad) * cos(distanceRatio) + cos(latRad) * sin(distanceRatio) * cos(theta))
+    val newLat =
+      asin(sin(latRad) * cos(distanceRatio) + cos(latRad) * sin(distanceRatio) * cos(theta))
     val newLng =
-      lngRad + atan2(sin(theta) * sin(distanceRatio) * cos(latRad), cos(distanceRatio) - sin(latRad) * sin(newLat))
+      lngRad + atan2(
+        sin(theta) * sin(distanceRatio) * cos(latRad),
+        cos(distanceRatio) - sin(latRad) * sin(newLat)
+      )
     points.add(DomainLatLng(Math.toDegrees(newLat), Math.toDegrees(newLng)))
   }
 

@@ -2,7 +2,6 @@ plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.compose.compiler)
   alias(libs.plugins.jetbrains.kotlin.android)
-  alias(libs.plugins.jetbrains.kotlin.serialization)
   alias(libs.plugins.secrets.gradle.plugin)
 }
 
@@ -51,6 +50,8 @@ dependencies {
 
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.lifecycle.runtime.ktx)
+  implementation(libs.androidx.lifecycle.runtime.compose)
+  implementation(libs.androidx.lifecycle.viewmodel.compose)
   implementation(libs.androidx.activity.compose)
   implementation(platform(libs.androidx.compose.bom))
   implementation(libs.androidx.ui)
@@ -66,8 +67,6 @@ dependencies {
   debugImplementation(libs.androidx.ui.tooling)
   debugImplementation(libs.androidx.ui.test.manifest)
 
-  implementation("androidx.navigation:navigation-compose:2.8.0-beta03")
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.0")
   implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.7")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0-RC")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0-RC")
@@ -83,6 +82,7 @@ dependencies {
 
   // Play Services Location
   implementation(libs.play.services.location)
+  implementation("com.google.android.gms:play-services-maps:19.0.0")
 }
 
 

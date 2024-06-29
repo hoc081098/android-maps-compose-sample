@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Maps Compose</string>
+
+    <string name="basic_markers_label">Basic markers</string>
+    <string name="advanced_markers_label">Advanced markers</string>
+    <string name="clustered_markers_label">Clustered markers</string>
+    <string name="show_all">Show all</string>
 </resources>

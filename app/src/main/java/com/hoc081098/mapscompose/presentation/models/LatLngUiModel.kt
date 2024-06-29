@@ -12,4 +12,5 @@ data class LatLngUiModel(
 
 fun DomainLatLng.toUiModel() = LatLngUiModel(latitude = latitude, longitude = longitude)
 
-fun LatLngUiModel.toGmsLatLng(): LatLng = LatLng(/* latitude = */ latitude, /* longitude = */ longitude)
+fun LatLngUiModel.toGmsLatLng(): LatLng =
+  LatLng(/* latitude = */ latitude, /* longitude = */ longitude)
