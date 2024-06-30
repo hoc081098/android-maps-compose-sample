@@ -74,7 +74,7 @@ enum class MarkerType(
 @OptIn(ExperimentalMaterial3Api::class)
 fun MapsComposeTopBar(
   topBarTitleStringRes: Int,
-  showAllChecked: Boolean,
+  showAllChecked: Boolean?,
   onAnimateToCurrentLocation: () -> Unit,
   onToggleShowAllClick: (Boolean) -> Unit
 ) {
@@ -89,11 +89,13 @@ fun MapsComposeTopBar(
           contentDescription = null
         )
       }
-      SwitchWithText(
-        label = stringResource(id = R.string.show_all),
-        checked = showAllChecked,
-        onCheckedChange = onToggleShowAllClick
-      )
+      if (showAllChecked != null) {
+        SwitchWithText(
+          label = stringResource(id = R.string.show_all),
+          checked = showAllChecked,
+          onCheckedChange = onToggleShowAllClick
+        )
+      }
     }
   )
 }

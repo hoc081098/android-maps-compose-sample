@@ -117,6 +117,32 @@ class MarkersViewModel(
     }
   }
 
+  internal fun updateShowAll(showAll: Boolean) {
+    _uiStateFlow.update { state ->
+      when (state) {
+        is MarkersUiState.Content ->
+          if (state.showAll == showAll) {
+            state
+          } else {
+            state.copy(
+              showAll = showAll,
+              stores = if (showAll) {
+                state.allStores
+              } else {
+                state.allStores
+                  .filter { it.isFavorite }
+                  .toImmutableList()
+              }
+            )
+          }
+
+        MarkersUiState.Error,
+        MarkersUiState.Loading,
+        MarkersUiState.Uninitialized -> TODO()
+      }
+    }
+  }
+
   //region Internal
   @SuppressLint("MissingPermission")
   @CheckResult
@@ -151,11 +177,14 @@ class MarkersViewModel(
         .getStores(currentLocationResult)
         .fold(
           onSuccess = { stores ->
+            val allStores = stores.map { it.toUiModel() }.toImmutableList()
             MarkersUiState.Content(
               currentLatLng = currentLocationResult.toUiModel(),
               zoomLevel = GoogleMapContentDefaults.ZoomLevel,
-              stores = stores.map { it.toUiModel() }.toImmutableList(),
+              stores = allStores,
               isRefreshing = false,
+              showAll = true,
+              allStores = allStores,
             )
           },
           onFailure = { MarkersUiState.Error },

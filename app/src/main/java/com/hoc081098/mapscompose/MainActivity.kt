@@ -11,17 +11,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hoc081098.mapscompose.presentation.advanced.AdvancedMarkersScreen
 import com.hoc081098.mapscompose.presentation.basic.BasicMarkersScreen
 import com.hoc081098.mapscompose.presentation.clustered.ClusteredMarkersScreen
 import com.hoc081098.mapscompose.presentation.markers.MarkersScreen
+import com.hoc081098.mapscompose.presentation.markers.MarkersUiState
 import com.hoc081098.mapscompose.presentation.markers.MarkersViewModel
 import com.hoc081098.mapscompose.ui.theme.MapsComposeTheme
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.map
 
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,15 +39,19 @@ class MainActivity : ComponentActivity() {
       // Remember the type of marker we want to show
       var selectedMarkerType by rememberSaveable { mutableStateOf(MarkerType.Basic) }
 
+      val showAllCheckedFlow by
+      remember(viewModel) { viewModel.uiStateFlow.map { (it as? MarkersUiState.Content)?.showAll } }
+        .collectAsStateWithLifecycle(initialValue = null, context = Dispatchers.Main.immediate)
+
       MapsComposeTheme(dynamicColor = false) {
         Scaffold(
           modifier = Modifier.fillMaxSize(),
           topBar = {
             MapsComposeTopBar(
               topBarTitleStringRes = selectedMarkerType.title,
-              showAllChecked = false,
+              showAllChecked = showAllCheckedFlow,
               onAnimateToCurrentLocation = viewModel::zoomToCurrentLocation,
-              onToggleShowAllClick = {},
+              onToggleShowAllClick = viewModel::updateShowAll,
             )
           },
           bottomBar = {

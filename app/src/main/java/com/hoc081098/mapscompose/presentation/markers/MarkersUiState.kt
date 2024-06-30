@@ -18,5 +18,7 @@ sealed interface MarkersUiState {
     val zoomLevel: Float,
     val stores: ImmutableList<StoreUiModel>,
     val isRefreshing: Boolean,
+    val showAll: Boolean,
+    val allStores: ImmutableList<StoreUiModel>,
   ) : MarkersUiState
 }
