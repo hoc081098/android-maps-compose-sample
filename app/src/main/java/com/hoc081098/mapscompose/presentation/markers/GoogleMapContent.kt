@@ -90,7 +90,7 @@ fun GoogleMapContent(
       onMapClick = {},
       onMapLongClick = {},
       onMapLoaded = { isMapLoaded = true },
-      googleMapOptionsFactory = { GoogleMapOptions().mapId(BuildConfig.MAPS_ID) }
+//      googleMapOptionsFactory = { GoogleMapOptions().mapId(BuildConfig.MAPS_ID) }
     ) {
       markerContent(uiState)
     }
