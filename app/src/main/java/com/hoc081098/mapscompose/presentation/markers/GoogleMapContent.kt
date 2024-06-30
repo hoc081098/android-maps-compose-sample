@@ -38,6 +38,7 @@ import com.hoc081098.mapscompose.presentation.models.toGmsLatLng
 import kotlinx.coroutines.flow.distinctUntilChanged
 import timber.log.Timber
 
+@Suppress("ConstPropertyName")
 object GoogleMapContentDefaults {
   val LatLng = LatLng(16.047079, 108.206230)
   const val ZoomLevel = 15f

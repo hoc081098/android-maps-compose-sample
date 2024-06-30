@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hoc081098.mapscompose.presentation.advanced.AdvancedMarkersScreen
 import com.hoc081098.mapscompose.presentation.basic.BasicMarkersScreen
+import com.hoc081098.mapscompose.presentation.clustered.ClusteredMarkersScreen
 import com.hoc081098.mapscompose.presentation.markers.MarkersScreen
 import com.hoc081098.mapscompose.presentation.markers.MarkersViewModel
 import com.hoc081098.mapscompose.ui.theme.MapsComposeTheme
@@ -69,7 +70,8 @@ class MainActivity : ComponentActivity() {
                 MarkerType.Advanced ->
                   AdvancedMarkersScreen(uiState = uiState)
 
-                MarkerType.Clustered -> TODO()
+                MarkerType.Clustered ->
+                  ClusteredMarkersScreen(uiState = uiState)
               }
             }
           }
