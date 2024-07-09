@@ -7,8 +7,7 @@ map features.
 
 ## Youtube video
 
-(Google IO Extended MienTrung - Grow with Android Summarise
-video)[https://www.youtube.com/live/kyOiF010rDc?si=22ooH2ieeszCth3V&t=2774]
+[Google IO Extended MienTrung - Grow with Android Summarisevideo](https://www.youtube.com/live/kyOiF010rDc?si=22ooH2ieeszCth3V&t=2774)
 
 ## Slide
 
@@ -18,4 +17,4 @@ video)[https://www.youtube.com/live/kyOiF010rDc?si=22ooH2ieeszCth3V&t=2774]
 
 | Basic Markers                   | Advanced Markers                      | Marker Clustering                       |
 |---------------------------------|---------------------------------------|-----------------------------------------|
-| ![basic](screenshots/basic.png) | ![advanced](screenshots/advanced.png) | ![clustered](screenshots/clustered.png) |
+| <img src="screenshots/basic.png" height="480" /> | <img src="screenshots/advanced.jpg" height="480" /> | <img src="screenshots/clustered.png" height="480" /> |
