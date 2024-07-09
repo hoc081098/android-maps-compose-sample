@@ -3,19 +3,30 @@ package com.hoc081098.mapscompose.utils
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.time.Duration
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 
 /**
  * https://github.com/Kotlin/kotlinx.coroutines/issues/1814
  */
 @OptIn(ExperimentalContracts::class)
-@Suppress("RedundantSuspendModifier")
-suspend inline fun <R> runSuspendCatching(block: () -> R): Result<R> {
-  contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
+suspend inline fun <R> runSuspendCatching(
+  context: CoroutineContext = EmptyCoroutineContext,
+  crossinline block: suspend CoroutineScope.() -> R
+): Result<R> {
+  contract { callsInPlace(block, InvocationKind.AT_MOST_ONCE) }
+
   return try {
-    Result.success(block())
+    Result.success(
+      withContext(context) {
+        block()
+      }
+    )
   } catch (c: CancellationException) {
     throw c
   } catch (e: Throwable) {

@@ -21,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMapOptions
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
@@ -31,7 +30,6 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.GoogleMapComposable
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
-import com.hoc081098.mapscompose.BuildConfig
 import com.hoc081098.mapscompose.R
 import com.hoc081098.mapscompose.presentation.models.LatLngUiModel
 import com.hoc081098.mapscompose.presentation.models.toGmsLatLng

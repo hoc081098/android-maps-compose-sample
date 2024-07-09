@@ -8,8 +8,8 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.google.android.gms.common.api.ResolvableApiException
 import com.hoc081098.mapscompose.MapsComposeAppLocator
 import com.hoc081098.mapscompose.domain.StoreRepository
-import com.hoc081098.mapscompose.presentation.AndroidLocationManager
-import com.hoc081098.mapscompose.presentation.AndroidLocationManager.LocationSettingsError
+import com.hoc081098.mapscompose.gateway.AndroidLocationManager
+import com.hoc081098.mapscompose.gateway.AndroidLocationManager.LocationSettingsError
 import com.hoc081098.mapscompose.presentation.models.PermissionStatus
 import com.hoc081098.mapscompose.presentation.models.toUiModel
 import kotlinx.collections.immutable.toImmutableList

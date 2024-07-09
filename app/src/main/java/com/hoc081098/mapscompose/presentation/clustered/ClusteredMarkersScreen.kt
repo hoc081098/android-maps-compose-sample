@@ -89,13 +89,13 @@ private fun SingleStoreItem(
 ) {
   Icon(
     modifier = modifier
-        .size(32.dp)
-        .padding(1.dp)
-        .drawBehind {
-            drawCircle(color = colors.backgroundColor, style = Fill)
-            drawCircle(color = colors.borderColor, style = Stroke(width = 3f))
-        }
-        .padding(4.dp),
+      .size(32.dp)
+      .padding(1.dp)
+      .drawBehind {
+        drawCircle(color = colors.backgroundColor, style = Fill)
+        drawCircle(color = colors.borderColor, style = Stroke(width = 3f))
+      }
+      .padding(4.dp),
     imageVector = ImageVector.vectorResource(id = R.drawable.baseline_store_24),
     tint = colors.iconColor,
     contentDescription = "",

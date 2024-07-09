@@ -4,8 +4,8 @@ import android.app.Application
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.MapsInitializer
 import com.hoc081098.mapscompose.data.FakeStoreRepository
-import com.hoc081098.mapscompose.presentation.AndroidLocationManager
-import com.hoc081098.mapscompose.presentation.GmsAndroidLocationManager
+import com.hoc081098.mapscompose.data.GmsAndroidLocationManager
+import com.hoc081098.mapscompose.gateway.AndroidLocationManager
 import timber.log.Timber
 
 class MapsComposeApp : Application() {
@@ -52,7 +52,7 @@ object MapsComposeAppLocator {
       settingsClient = settingsClient,
     )
   }
-  val storeRepository by lazy {
-    FakeStoreRepository()
-  }
+
+  val storeRepository: FakeStoreRepository
+    get() = FakeStoreRepository()
 }
