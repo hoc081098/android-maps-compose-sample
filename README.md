@@ -9,7 +9,7 @@ map features.
 
 ## Youtube video
 
-[Google IO Extended MienTrung - Grow with Android Summarisevideo](https://www.youtube.com/live/kyOiF010rDc?si=22ooH2ieeszCth3V&t=2774)
+[Google IO Extended MienTrung - Grow with Android](https://www.youtube.com/live/kyOiF010rDc?si=22ooH2ieeszCth3V&t=2774)
 
 ## Slide
 
