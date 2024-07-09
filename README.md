@@ -7,7 +7,12 @@ map features.
 
 ## Youtube video
 
-https://www.youtube.com/live/kyOiF010rDc?si=22ooH2ieeszCth3V&t=2774
+(Google IO Extended MienTrung - Grow with Android Summarise
+video)[https://www.youtube.com/live/kyOiF010rDc?si=22ooH2ieeszCth3V&t=2774]
+
+## Slide
+
+[[hoc081098] More with maps in Jetpack Compose](https://docs.google.com/presentation/d/1Tl_Eq1zhUr7yNqwHrTRuo0ovlVO9QzD8kcTRY5uEPfU/edit?usp=sharing)
 
 ## Screenshots
 
