@@ -67,7 +67,7 @@ dependencies {
   debugImplementation(libs.androidx.ui.tooling)
   debugImplementation(libs.androidx.ui.test.manifest)
 
-  implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.7")
+  implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.8")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0-RC.2")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0-RC.2")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0-RC.2")
