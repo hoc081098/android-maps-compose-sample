@@ -8,7 +8,7 @@ espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.6"
 activityCompose = "1.9.3"
 composeBom = "2024.10.00"
-mapsComposeVersion = "6.1.2"
+mapsComposeVersion = "6.2.0"
 playServicesLocation = "21.3.0"
 appcompatResources = "1.7.0"
 
