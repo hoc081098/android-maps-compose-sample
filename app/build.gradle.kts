@@ -67,10 +67,10 @@ dependencies {
   debugImplementation(libs.androidx.ui.tooling)
   debugImplementation(libs.androidx.ui.test.manifest)
 
-  implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.8")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0")
+  implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.4.0")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.2")
   implementation("com.jakewharton.timber:timber:5.0.1")
 
   // Google Maps Compose library
@@ -82,7 +82,7 @@ dependencies {
 
   // Play Services Location
   implementation(libs.play.services.location)
-  implementation("com.google.android.gms:play-services-maps:19.0.0")
+  implementation("com.google.android.gms:play-services-maps:19.2.0")
 }
 
 
